@@ -9,7 +9,6 @@ import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 
 import java.nio.charset.StandardCharsets;
-import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,47 +73,45 @@ public class PaymentService {
 
         return response;
     }
-    
+
     public boolean verifyPaymentSignature(
-    		String razorpayOrderId,
-    		String razorpayPaymentId,
-    		String razorpaySignature
-    	) {
-    	
-    	try {
-    		String payload = razorpayOrderId + "|" + razorpayPaymentId;
-    		
-    		Mac mac = Mac.getInstance("HmacSHA256");
-    		
-    		SecretKeySpec secretKey = 
-    				new SecretKeySpec(
-    						keySecret.getBytes(StandardCharsets.UTF_8),
-    						"HmacSHA256"
-    						);
-    		mac.init(secretKey);
-    		
-    		byte[] hash = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
-    		
-    		String generatedSignature = Base64.getEncoder().encodeToString(hash);
-    		
-    		return generatedSignature.equals(razorpaySignature);
-    	
-    	}catch(Exception e) {
-    		return false;
-    	}
+            String razorpayOrderId,
+            String razorpayPaymentId,
+            String razorpaySignature) {
+
+        try {
+            String payload = razorpayOrderId + "|" + razorpayPaymentId;
+
+            Mac mac = Mac.getInstance("HmacSHA256");
+
+            SecretKeySpec secretKey = new SecretKeySpec(
+                    keySecret.getBytes(StandardCharsets.UTF_8),
+                    "HmacSHA256");
+            mac.init(secretKey);
+
+            byte[] hash = mac.doFinal(payload.getBytes(StandardCharsets.UTF_8));
+
+            String generatedSignature = Base64.getEncoder().encodeToString(hash);
+
+            return generatedSignature.equals(razorpaySignature);
+
+        } catch (Exception e) {
+            return false;
+        }
     }
-    
+
     public void markPaymentStatus(
-    		String razorpayOrderId,
-    		String razorpayPaymentId
-    	) {
-    	
-    	Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
-    			.orElseThrow(() -> new RuntimeException("Payment not found"));
-    	
-    	payment.setRazorpayPaymentId(razorpayPaymentId);
-    	payment.setStatus("SUCCESS");
-    	
-    	paymentRepository.save(payment);
+            String razorpayOrderId,
+            String razorpayPaymentId) {
+
+        Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
+                .orElseThrow(() -> new RuntimeException("Payment not found"));
+
+        payment.setRazorpayPaymentId(razorpayPaymentId);
+        payment.setStatus("SUCCESS");
+
+        paymentRepository.save(payment);
     }
 }
+
+// Payment service working

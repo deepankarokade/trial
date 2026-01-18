@@ -23,16 +23,13 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    
     @Profile("test")
     @PostMapping("/create-order")
     public ResponseEntity<Map<String, Object>> createOrderTest(
             @RequestParam Long amount) throws RazorpayException {
         return ResponseEntity.ok(
-            paymentService.createRazorpayOrder(amount, "INR")
-        );
+                paymentService.createRazorpayOrder(amount, "INR"));
     }
-    
-    @PostMapping("/verify")
-    
+
+    // Done Payment Controller
 }
