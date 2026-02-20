@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "payments", indexes = {
